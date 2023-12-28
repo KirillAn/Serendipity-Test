@@ -6,7 +6,6 @@ Open-source tool for EDA (Exploratory Data Analysis) of textual corpora. Built w
 
 This tool would be useful for social science researchers, data journalists, business analysts and PhD students who regularly need to gain insights from text data, but have little or no experience with tuning NLP pipelines/programming complex systems.
 
-This repo contains a minimal working prototype, demonstrating the potential of the technology. It has been developed during the AI Talent Hub Hackathon organized by the ITMO University in September, 2023.
 
 
 ## Examples
@@ -15,7 +14,7 @@ Please proceed to examples.ipynb and Test_new.ipynb if you wish to take a closer
   
 ## Algorithm
 
-<div id="header" align="center"> <img src=https://github.com/arsenplus/serendipity/blob/main/pics/working_flow.jpg width="1000"/>
+<div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/working_flow_new.png width="1000"/>
   </div>
 
 - topic modelling pipeline (dense embeddings -> dimensionality reduction -> clustering -> representation) extracts topics
