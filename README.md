@@ -11,14 +11,23 @@ This tool would be useful for social science researchers, data journalists, busi
 ## Examples
 
 Please proceed to examples.ipynb and Test_new.ipynb if you wish to take a closer look at how things work under the hood and/or use Jupyter as a platform for using the tool.
+
+
+<div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/exmpl1.jpg width="1000"/>
+  </div>
+  <div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/exmpl2.jpg width="1000"/>
+  </div>
+  <div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/exmpl3.jpg width="1000"/>
+  </div>
+
   
 ## Algorithm
 
-<div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/working_flow_new.png width="1000"/>
+<div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/work_flown.png width="1000"/>
   </div>
 
 - topic modelling pipeline (dense embeddings -> dimensionality reduction -> clustering -> representation) extracts topics
-- NER model extracts named entities
+- Knowledge Graph Induction with NER
 - zero-shot classifier categorizes the texts into one or more custom classes
 - corpus statistics (n-gram counts) are gathered per the whole corpus and each topic separately
 - Interactive DataViz dashboards are built on top of the preceding steps
