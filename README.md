@@ -8,25 +8,10 @@ This tool would be useful for social science researchers, data journalists, busi
 
 This repo contains a minimal working prototype, demonstrating the potential of the technology. It has been developed during the AI Talent Hub Hackathon organized by the ITMO University in September, 2023.
 
-## Installation
-- clone this repo to your local machine
-- make sure you have Docker and docker-compose pre-installed
-- run the following command:
-```
-docker-compose up -d --build
-```
-
-<div id="header" align="center"> <img src=https://github.com/arsenplus/serendipity/blob/main/pics/show(1).gif width="800"/>
-  </div> <br/>
-
-- then access the interface at http://localhost:9999 
-  
-<div id="header" align="center"> <img src=https://github.com/arsenplus/serendipity/blob/main/pics/show2(1).gif width="800"/>
-  </div> <br/>
 
 ## Examples
 
-Please proceed to examples.ipynb if you wish to take a closer look at how things work under the hood and/or use Jupyter as a platform for using the tool.
+Please proceed to examples.ipynb and Test_new.ipynb if you wish to take a closer look at how things work under the hood and/or use Jupyter as a platform for using the tool.
   
 ## Algorithm
 
