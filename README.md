@@ -6,6 +6,22 @@ Open-source tool for EDA (Exploratory Data Analysis) of textual corpora. Built w
 
 This tool would be useful for social science researchers, data journalists, business analysts and PhD students who regularly need to gain insights from text data, but have little or no experience with tuning NLP pipelines/programming complex systems.
 
+## Installation
+- clone this repo to your local machine
+- make sure you have Docker and docker-compose pre-installed
+- run the following command:
+```
+docker-compose up -d --build
+```
+
+<div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/show(1).gif width="800"/>
+  </div> <br/>
+
+- then access the interface at http://localhost:9999 
+  
+<div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/show2(1).gif width="800"/>
+  </div> <br/>
+
 
 
 ## Examples
