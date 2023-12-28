@@ -2,7 +2,7 @@
 <div id="header" align="center"> <img src=https://github.com/arsenplus/serendipity/blob/main/pics/ser_logo.jpg width="450"/></div>
 
 ![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white) ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)<br/>
-Open-source tool for EDA (Exploratory Data Analysis) of textual corpora. Built with BERTopic, transformers, and spaCy.
+Open-source tool for EDA (Exploratory Data Analysis) of textual corpora. Built with BERTopic, transformers, spaCy, pyvis and Gradio.
 
 This tool would be useful for social science researchers, data journalists, business analysts and PhD students who regularly need to gain insights from text data, but have little or no experience with tuning NLP pipelines/programming complex systems.
 
@@ -28,7 +28,7 @@ docker-compose up -d --build
 
 Please proceed to examples.ipynb and Test_new.ipynb if you wish to take a closer look at how things work under the hood and/or use Jupyter as a platform for using the tool.
 
-
+**Graphs**
 <div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/exmpl1.jpg width="1000"/>
   </div>
   <div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/exmpl2.jpg width="1000"/>
