@@ -3,8 +3,10 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from serendipity.utils import clean_doc
-
+from utils import clean_doc
+from pyvis.network import Network
+import random
+import tempfile
 from plotly.subplots import make_subplots
 from scipy.cluster.hierarchy import fcluster, linkage
 from sklearn.metrics.pairwise import cosine_similarity
@@ -323,3 +325,157 @@ def viz_n_grams_per_topic(texts, topic_model, topic=1, n=3):
         )
 
     return fig
+
+# Функция для визуализации графа знаний
+# def viz_knowledge_graph(ents, kb_relations):
+#     net = Network(
+#         directed=True,
+#         height='700px',
+#         width='100%',
+#         bgcolor='#222222',
+#         font_color='white'
+#     )
+#
+#     # Добавление узлов
+#     for index, entity in ents.iterrows():
+#         net.add_node(entity['Entity'], title=entity['Entity'])
+#
+#     # Добавление рёбер
+#     for index, relation in kb_relations.iterrows():
+#         net.add_edge(relation['Head'], relation['Tail'], title=relation['Type'])
+#
+#     # Настройки физики сети для анимации
+#     net.repulsion(node_distance=420, central_gravity=0.33,
+#                   spring_length=110, spring_strength=0.10,
+#                   damping=0.95)
+#
+#     # Генерация HTML и возврат как объекта fig
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmpfile:
+#         net.show(tmpfile.name)
+#         # Чтение HTML-кода из временного файла и сохранение в переменную
+#         tmpfile.seek(0)
+#         html_content = tmpfile.read().decode('utf-8')
+#
+#     # Использование Plotly объекта Figure для встраивания HTML
+#     fig = go.Figure(data=[go.Scatter(x=[], y=[])], layout=go.Layout())
+#     fig.update_layout(
+#         template=None,
+#         title="Knowledge Graph Visualization",
+#         margin=dict(l=0, r=0, t=30, b=0)
+#     )
+#     fig.add_trace(
+#         go.Scatter(
+#             x=[0], y=[0],
+#             mode='markers+text',
+#             text=['<iframe srcdoc="'+html_content+'" style="width:100%; height:700px;"></iframe>'],
+#             textposition="bottom center"
+#         )
+#     )
+#
+#     return fig
+# def viz_knowledge_graph(kb):
+#     net = Network(
+#         directed=True,
+#         height="700px",
+#         width="100%",
+#         bgcolor="#eeeeee"
+#     )
+#
+#     color_entity = "#00FF00"
+#
+#     # Сбор всех уникальных сущностей из отношений
+#     unique_entities = set()
+#     for relation in kb.relations:
+#         unique_entities.add(relation['head'])
+#         unique_entities.add(relation['tail'])
+#
+#     # Добавление узлов
+#     for entity in unique_entities:
+#         if entity in kb.entities:
+#             entity_info = kb.entities[entity]
+#             net.add_node(entity, title=entity, shape="circle", color=color_entity)
+#
+#     # Добавление рёбер
+#     for relation in kb.relations:
+#         if relation['head'] in unique_entities and relation['tail'] in unique_entities:
+#             net.add_edge(relation['head'], relation['tail'], title=relation['type'], label=relation['type'])
+#
+#     net.repulsion(node_distance=200, central_gravity=0.2, spring_length=200, spring_strength=0.05, damping=0.09)
+#     net.set_edge_smooth('dynamic')
+#
+#     # Генерация HTML
+#     html = net.generate_html()
+#     html = html.replace("'", "\"")
+#     iframe_html = f"""<iframe style="width: 100%; height: 700px;margin:0 auto" name="result" allow="midi; geolocation; microphone; camera; display-capture; encrypted-media;" sandbox="allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads" allowfullscreen="" allowpaymentrequest="" frameborder="0" srcdoc='{html}'></iframe>"""
+#
+#     return iframe_html
+#
+#
+import random
+
+def determine_color(topic_labels, topic_colors):
+    # Убедимся, что topic_labels это список
+    if not isinstance(topic_labels, list):
+        topic_labels = [topic_labels]
+
+    # Преобразуем числа в строки
+    topic_labels_str = [str(topic) for topic in topic_labels]
+
+    # Сортировка тем и создание уникального идентификатора
+    topic_key = "-".join(sorted(topic_labels_str))
+
+    # Если тема уже имеет назначенный цвет, возвращаем этот цвет
+    if topic_key in topic_colors:
+        return topic_colors[topic_key]
+    else:
+        # Генерируем случайный цвет
+        random_color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        # Добавляем цвет в словарь для этой комбинации тем
+        topic_colors[topic_key] = random_color
+        return random_color
+
+def viz_knowledge_graph(kb):
+    net = Network(
+        directed=True,
+        height="700px",
+        width="100%",
+        bgcolor="#eeeeee"
+    )
+
+    topic_colors = {}  # Словарь для хранения цветов тем
+
+    # Сбор всех уникальных сущностей из отношений
+    unique_entities = set()
+    for relation in kb.relations:
+        unique_entities.add(relation['head'])
+        unique_entities.add(relation['tail'])
+
+    # Добавление узлов
+    for entity in unique_entities:
+        if entity in kb.entities:
+            entity_info = kb.entities[entity]
+            color_entity = determine_color(entity_info.get('topic_label', []), topic_colors)
+            net.add_node(entity, title=entity, shape="circle", color=color_entity)
+
+    # Добавление рёбер
+    for relation in kb.relations:
+        if relation['head'] in unique_entities and relation['tail'] in unique_entities:
+            net.add_edge(relation['head'], relation['tail'], title=relation['type'], label=relation['type'])
+
+    net.repulsion(node_distance=200, central_gravity=0.2, spring_length=200, spring_strength=0.05, damping=0.09)
+    net.set_edge_smooth('dynamic')
+
+    # Генерация HTML
+    html = net.generate_html()
+    html = html.replace("'", "\"")
+    iframe_html = f"""<iframe style="width: 100%; height: 700px;margin:0 auto" name="result" allow="midi; geolocation; microphone; camera; display-capture; encrypted-media;" sandbox="allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation allow-downloads" allowfullscreen="" allowpaymentrequest="" frameborder="0" srcdoc='{html}'></iframe>"""
+
+    return iframe_html
+
+
+
+
+
+#%%
+
+#%%
