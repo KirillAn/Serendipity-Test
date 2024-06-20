@@ -1,0 +1,1085 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 800px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="US">US</option>
+                                
+                                    <option value="Robert Sinche">Robert Sinche</option>
+                                
+                                    <option value="Russia">Russia</option>
+                                
+                                    <option value="Rosneft">Rosneft</option>
+                                
+                                    <option value="Tim Osborne">Tim Osborne</option>
+                                
+                                    <option value="Rod Eddington">Rod Eddington</option>
+                                
+                                    <option value="Martin Broughton">Martin Broughton</option>
+                                
+                                    <option value="Nick Van den Brul">Nick Van den Brul</option>
+                                
+                                    <option value="Pernod Ricard">Pernod Ricard</option>
+                                
+                                    <option value="Allied Domecq">Allied Domecq</option>
+                                
+                                    <option value="Seagram">Seagram</option>
+                                
+                                    <option value="Diageo">Diageo</option>
+                                
+                                    <option value="Scotland">Scotland</option>
+                                
+                                    <option value="Heizo Takenaka">Heizo Takenaka</option>
+                                
+                                    <option value="Paul Sheard">Paul Sheard</option>
+                                
+                                    <option value="Rick Egelton">Rick Egelton</option>
+                                
+                                    <option value="Ken Mayland">Ken Mayland</option>
+                                
+                                    <option value="Palaniappan Chidambaram">Palaniappan Chidambaram</option>
+                                
+                                    <option value="G20">G20</option>
+                                
+                                    <option value="Gordon Brown">Gordon Brown</option>
+                                
+                                    <option value="IMF">IMF</option>
+                                
+                                    <option value="Henri Josserand">Henri Josserand</option>
+                                
+                                    <option value="Sri Mulyani Indrawati">Sri Mulyani Indrawati</option>
+                                
+                                    <option value="Rachel Harvey">Rachel Harvey</option>
+                                
+                                    <option value="Megawati Sukarnoputri">Megawati Sukarnoputri</option>
+                                
+                                    <option value="DaimlerChrylser">DaimlerChrylser</option>
+                                
+                                    <option value="Mitsubishi Motors">Mitsubishi Motors</option>
+                                
+                                    <option value="Takashi Nishioka">Takashi Nishioka</option>
+                                
+                                    <option value="Japan">Japan</option>
+                                
+                                    <option value="Jeremy Dear">Jeremy Dear</option>
+                                
+                                    <option value="Barry Fitzpatrick">Barry Fitzpatrick</option>
+                                
+                                    <option value="Conrad Black">Conrad Black</option>
+                                
+                                    <option value="Murdoch MacLennan">Murdoch MacLennan</option>
+                                
+                                    <option value="Michael Cawley">Michael Cawley</option>
+                                
+                                    <option value="Andy Clarke">Andy Clarke</option>
+                                
+                                    <option value="Jacques Barrot">Jacques Barrot</option>
+                                
+                                    <option value="Enrico Bondi">Enrico Bondi</option>
+                                
+                                    <option value="Standard & Poor">Standard & Poor</option>
+                                
+                                    <option value="Bhanu Baweja">Bhanu Baweja</option>
+                                
+                                    <option value="Dayanidhi Maran">Dayanidhi Maran</option>
+                                
+                                    <option value="Kobita Desai">Kobita Desai</option>
+                                
+                                    <option value="Cara Diemont">Cara Diemont</option>
+                                
+                                    <option value="Greensleeves">Greensleeves</option>
+                                
+                                    <option value="Mike Smith">Mike Smith</option>
+                                
+                                    <option value="Frank - Juergen Weise">Frank - Juergen Weise</option>
+                                
+                                    <option value="Isabelle Kronawitter">Isabelle Kronawitter</option>
+                                
+                                    <option value="David Naude">David Naude</option>
+                                
+                                    <option value="Marie - Pierre Ripert">Marie - Pierre Ripert</option>
+                                
+                                    <option value="Yukos">Yukos</option>
+                                
+                                    <option value="Houston">Houston</option>
+                                
+                                    <option value="Mikhail Khodorkovsky">Mikhail Khodorkovsky</option>
+                                
+                                    <option value="Russian">Russian</option>
+                                
+                                    <option value="NHTSA">NHTSA</option>
+                                
+                                    <option value="Orin Middleton">Orin Middleton</option>
+                                
+                                    <option value="Vestey Group">Vestey Group</option>
+                                
+                                    <option value="Alexis Ortiz">Alexis Ortiz</option>
+                                
+                                    <option value="eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD">eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD</option>
+                                
+                                    <option value="eurozone">eurozone</option>
+                                
+                                    <option value="OECD">OECD</option>
+                                
+                                    <option value="Jean - Philippe Cotis">Jean - Philippe Cotis</option>
+                                
+                                    <option value="Vincent Koen">Vincent Koen</option>
+                                
+                                    <option value="Bank of Ireland">Bank of Ireland</option>
+                                
+                                    <option value="Roy Asher">Roy Asher</option>
+                                
+                                    <option value="Bernard McAlinden">Bernard McAlinden</option>
+                                
+                                    <option value="Tokyo">Tokyo</option>
+                                
+                                    <option value="UFJ Holdings">UFJ Holdings</option>
+                                
+                                    <option value="£1bn ( $ 1. 9bn">£1bn ( $ 1. 9bn</option>
+                                
+                                    <option value="Tony Woodley">Tony Woodley</option>
+                                
+                                    <option value="SAIC">SAIC</option>
+                                
+                                    <option value="WPP">WPP</option>
+                                
+                                    <option value="Martin Sorrell">Martin Sorrell</option>
+                                
+                                    <option value="J Walter Thompson">J Walter Thompson</option>
+                                
+                                    <option value="Digby Jones">Digby Jones</option>
+                                
+                                    <option value="Donald Nicolaisen">Donald Nicolaisen</option>
+                                
+                                    <option value="Illva Saronno">Illva Saronno</option>
+                                
+                                    <option value="Peter McGuigan">Peter McGuigan</option>
+                                
+                                    <option value="UK">UK</option>
+                                
+                                    <option value="Alan Greenspan">Alan Greenspan</option>
+                                
+                                    <option value="Gerry Spindler">Gerry Spindler</option>
+                                
+                                    <option value="Saud Al - Faisal">Saud Al - Faisal</option>
+                                
+                                    <option value="Naoki Iizuka">Naoki Iizuka</option>
+                                
+                                    <option value="Western Refining Company">Western Refining Company</option>
+                                
+                                    <option value="Kyle Cooper">Kyle Cooper</option>
+                                
+                                    <option value="Texas City">Texas City</option>
+                                
+                                    <option value="Oil">Oil</option>
+                                
+                                    <option value="Takashi Yamanaka">Takashi Yamanaka</option>
+                                
+                                    <option value="David Bonderman">David Bonderman</option>
+                                
+                                    <option value="Norbert Reithofer">Norbert Reithofer</option>
+                                
+                                    <option value="Oxford">Oxford</option>
+                                
+                                    <option value="Brad Wernle">Brad Wernle</option>
+                                
+                                    <option value="Rover">Rover</option>
+                                
+                                    <option value="Americas">Americas</option>
+                                
+                                    <option value="Alfa Romeo">Alfa Romeo</option>
+                                
+                                    <option value="Fiat">Fiat</option>
+                                
+                                    <option value="Maserati">Maserati</option>
+                                
+                                    <option value="Silvio Berlusconi">Silvio Berlusconi</option>
+                                
+                                    <option value="Italy">Italy</option>
+                                
+                                    <option value="London">London</option>
+                                
+                                    <option value="Hyundai">Hyundai</option>
+                                
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                
+                                    <option value="Demand">Demand</option>
+                                
+                                    <option value="South African">South African</option>
+                                
+                                    <option value="Colen Garrow">Colen Garrow</option>
+                                
+                                    <option value="Helmut Panke">Helmut Panke</option>
+                                
+                                    <option value="BMW">BMW</option>
+                                
+                                    <option value="Rachel Lomax">Rachel Lomax</option>
+                                
+                                    <option value="Ms Lomax">Ms Lomax</option>
+                                
+                                    <option value="Europe">Europe</option>
+                                
+                                    <option value="Spennymoor">Spennymoor</option>
+                                
+                                    <option value="Electrolux">Electrolux</option>
+                                
+                                    <option value="Hans Straberg">Hans Straberg</option>
+                                
+                                    <option value="Bernie Ebbers">Bernie Ebbers</option>
+                                
+                                    <option value="Cynthia Cooper">Cynthia Cooper</option>
+                                
+                                    <option value="Arthur Andersen">Arthur Andersen</option>
+                                
+                                    <option value="Scott Sullivan">Scott Sullivan</option>
+                                
+                                    <option value="MCI">MCI</option>
+                                
+                                    <option value="Eliot Spitzer">Eliot Spitzer</option>
+                                
+                                    <option value="Marsh">Marsh</option>
+                                
+                                    <option value="Marc Ostwald">Marc Ostwald</option>
+                                
+                                    <option value="Simon Wheatley">Simon Wheatley</option>
+                                
+                                    <option value="Excluding">Excluding</option>
+                                
+                                    <option value="Steve Gallagher">Steve Gallagher</option>
+                                
+                                    <option value="Parul Jain">Parul Jain</option>
+                                
+                                    <option value="Van Rourke">Van Rourke</option>
+                                
+                                    <option value="George W Bush">George W Bush</option>
+                                
+                                    <option value="Air Force One">Air Force One</option>
+                                
+                                    <option value="Frankfurt">Frankfurt</option>
+                                
+                                    <option value="Michael Lamberty">Michael Lamberty</option>
+                                
+                                    <option value="Germany">Germany</option>
+                                
+                                    <option value="Ulrich Schulte - Strathaus">Ulrich Schulte - Strathaus</option>
+                                
+                                    <option value="Bernd Weidensteiner">Bernd Weidensteiner</option>
+                                
+                                    <option value="Wolfgang Clement">Wolfgang Clement</option>
+                                
+                                    <option value="Hans - Werner Sinn">Hans - Werner Sinn</option>
+                                
+                                    <option value="Dr Vancheshwar">Dr Vancheshwar</option>
+                                
+                                    <option value="Richard Ellis">Richard Ellis</option>
+                                
+                                    <option value="Chittabrata Majumdar">Chittabrata Majumdar</option>
+                                
+                                    <option value="Boeing">Boeing</option>
+                                
+                                    <option value="David Learmount">David Learmount</option>
+                                
+                                    <option value="Bill Armstrong">Bill Armstrong</option>
+                                
+                                    <option value="Key">Key</option>
+                                
+                                    <option value="Iran">Iran</option>
+                                
+                                    <option value="Atinc Ozkan">Atinc Ozkan</option>
+                                
+                                    <option value="Tehran">Tehran</option>
+                                
+                                    <option value="European Union">European Union</option>
+                                
+                                    <option value="Intifada">Intifada</option>
+                                
+                                    <option value="Nigel Roberts">Nigel Roberts</option>
+                                
+                                    <option value="Colin Powell">Colin Powell</option>
+                                
+                                    <option value="Yugansk">Yugansk</option>
+                                
+                                    <option value="Sergei Oganesyan">Sergei Oganesyan</option>
+                                
+                                    <option value="Dmitry Lukashov">Dmitry Lukashov</option>
+                                
+                                    <option value="Gianni Agnelli">Gianni Agnelli</option>
+                                
+                                    <option value="Hugo Chavez">Hugo Chavez</option>
+                                
+                                    <option value="Kirchner">Kirchner</option>
+                                
+                                    <option value="Argentina">Argentina</option>
+                                
+                                    <option value="Brazil">Brazil</option>
+                                
+                                    <option value="Petrobras">Petrobras</option>
+                                
+                                    <option value="South American">South American</option>
+                                
+                                    <option value="Robert Bosch">Robert Bosch</option>
+                                
+                                    <option value="Mercedes Benz">Mercedes Benz</option>
+                                
+                                    <option value="Andrew Beh">Andrew Beh</option>
+                                
+                                    <option value="Deutsche Bank">Deutsche Bank</option>
+                                
+                                    <option value="Bruce Misamore">Bruce Misamore</option>
+                                
+                                    <option value="Howard Archer">Howard Archer</option>
+                                
+                                    <option value="Lena Komileva">Lena Komileva</option>
+                                
+                                    <option value="David Myers">David Myers</option>
+                                
+                                    <option value="Robert Benmosche">Robert Benmosche</option>
+                                
+                                    <option value="Smith Barney">Smith Barney</option>
+                                
+                                    <option value="Stuart Quint">Stuart Quint</option>
+                                
+                                    <option value="Junya Tanase">Junya Tanase</option>
+                                
+                                    <option value="Nicolas Sarkozy">Nicolas Sarkozy</option>
+                                
+                                    <option value="John Snow">John Snow</option>
+                                
+                                    <option value="Mr Sarkozy">Mr Sarkozy</option>
+                                
+                                    <option value="Jean - Michel Lemetayer">Jean - Michel Lemetayer</option>
+                                
+                                    <option value="Helena Hessel">Helena Hessel</option>
+                                
+                                    <option value="Israel">Israel</option>
+                                
+                                    <option value="GSM">GSM</option>
+                                
+                                    <option value="Ruhi Dogusoy">Ruhi Dogusoy</option>
+                                
+                                    <option value="Roberto Lavagna">Roberto Lavagna</option>
+                                
+                                    <option value="Nestor Kirchner">Nestor Kirchner</option>
+                                
+                                    <option value="New York">New York</option>
+                                
+                                    <option value="Finian O'Sullivan">Finian O'Sullivan</option>
+                                
+                                    <option value="Ireland">Ireland</option>
+                                
+                                    <option value="Economists">Economists</option>
+                                
+                                    <option value="Carsten Fritsch">Carsten Fritsch</option>
+                                
+                                    <option value="James Carrick">James Carrick</option>
+                                
+                                    <option value="Mark LaNeve">Mark LaNeve</option>
+                                
+                                    <option value="North American">North American</option>
+                                
+                                    <option value="Jim Press">Jim Press</option>
+                                
+                                    <option value="Federal Reserve">Federal Reserve</option>
+                                
+                                    <option value="Bank of America">Bank of America</option>
+                                
+                                    <option value="Menatep Group">Menatep Group</option>
+                                
+                                    <option value="BA">BA</option>
+                                
+                                    <option value="BNP Paribas">BNP Paribas</option>
+                                
+                                    <option value="France">France</option>
+                                
+                                    <option value="Glenmorangie">Glenmorangie</option>
+                                
+                                    <option value="Lehman Brothers">Lehman Brothers</option>
+                                
+                                    <option value="BMO Financial Group">BMO Financial Group</option>
+                                
+                                    <option value="ClearView Economics">ClearView Economics</option>
+                                
+                                    <option value="India">India</option>
+                                
+                                    <option value="Chidambaram">Chidambaram</option>
+                                
+                                    <option value="FAO">FAO</option>
+                                
+                                    <option value="National Development Planning">National Development Planning</option>
+                                
+                                    <option value="BBC">BBC</option>
+                                
+                                    <option value="Indonesia">Indonesia</option>
+                                
+                                    <option value="Mitsubishi">Mitsubishi</option>
+                                
+                                    <option value="Nissan Motor">Nissan Motor</option>
+                                
+                                    <option value="NUJ">NUJ</option>
+                                
+                                    <option value="Telegraph Group">Telegraph Group</option>
+                                
+                                    <option value="Telegraph">Telegraph</option>
+                                
+                                    <option value="Ryanair">Ryanair</option>
+                                
+                                    <option value="Radio 4">Radio 4</option>
+                                
+                                    <option value="ERAA">ERAA</option>
+                                
+                                    <option value="Commissioner for Transport">Commissioner for Transport</option>
+                                
+                                    <option value="Morgan Stanley">Morgan Stanley</option>
+                                
+                                    <option value="Communications">Communications</option>
+                                
+                                    <option value="Gartner">Gartner</option>
+                                
+                                    <option value="Dimension Data">Dimension Data</option>
+                                
+                                    <option value="Vivaldi">Vivaldi</option>
+                                
+                                    <option value="Pinewood">Pinewood</option>
+                                
+                                    <option value="Federal Labour Agency">Federal Labour Agency</option>
+                                
+                                    <option value="Hypovereinsbank">Hypovereinsbank</option>
+                                
+                                    <option value="IXIS">IXIS</option>
+                                
+                                    <option value="National Highway Traffic Safety Administration">National Highway Traffic Safety Administration</option>
+                                
+                                    <option value="Barclays Capital">Barclays Capital</option>
+                                
+                                    <option value="Cojedes">Cojedes</option>
+                                
+                                    <option value="Reuters">Reuters</option>
+                                
+                                    <option value="Hibernian Investment Managers">Hibernian Investment Managers</option>
+                                
+                                    <option value="NCB Stockbrokers">NCB Stockbrokers</option>
+                                
+                                    <option value="Transport & General Worker">Transport & General Worker</option>
+                                
+                                    <option value="United Business Media">United Business Media</option>
+                                
+                                    <option value="Young & Rubicam">Young & Rubicam</option>
+                                
+                                    <option value="SEC">SEC</option>
+                                
+                                    <option value="Prince">Prince</option>
+                                
+                                    <option value="Tsutsumi">Tsutsumi</option>
+                                
+                                    <option value="Anheuser - Busch">Anheuser - Busch</option>
+                                
+                                    <option value="London Stock Exchange">London Stock Exchange</option>
+                                
+                                    <option value="South Yorkshire">South Yorkshire</option>
+                                
+                                    <option value="Saudi Arabia">Saudi Arabia</option>
+                                
+                                    <option value="Dai - ichi Life Research Institute">Dai - ichi Life Research Institute</option>
+                                
+                                    <option value="Texas">Texas</option>
+                                
+                                    <option value="Citigroup Global Markets">Citigroup Global Markets</option>
+                                
+                                    <option value="Opec">Opec</option>
+                                
+                                    <option value="UFJ Bank">UFJ Bank</option>
+                                
+                                    <option value="Parmalat">Parmalat</option>
+                                
+                                    <option value="Cowley">Cowley</option>
+                                
+                                    <option value="Automotive News Europe">Automotive News Europe</option>
+                                
+                                    <option value="Longbridge">Longbridge</option>
+                                
+                                    <option value="China">China</option>
+                                
+                                    <option value="Ferrari">Ferrari</option>
+                                
+                                    <option value="Rome">Rome</option>
+                                
+                                    <option value="R & D">R & D</option>
+                                
+                                    <option value="Canary Wharf">Canary Wharf</option>
+                                
+                                    <option value="Chennai">Chennai</option>
+                                
+                                    <option value="Economist">Economist</option>
+                                
+                                    <option value="Bank of England">Bank of England</option>
+                                
+                                    <option value="MPC">MPC</option>
+                                
+                                    <option value="Mexico">Mexico</option>
+                                
+                                    <option value="Newton Aycliffe">Newton Aycliffe</option>
+                                
+                                    <option value="WorldCom">WorldCom</option>
+                                
+                                    <option value="Verizon Communications">Verizon Communications</option>
+                                
+                                    <option value="Bewlay">Bewlay</option>
+                                
+                                    <option value="Monument Securities">Monument Securities</option>
+                                
+                                    <option value="Wembley">Wembley</option>
+                                
+                                    <option value="Goldman Sachs">Goldman Sachs</option>
+                                
+                                    <option value="SG Corporate & Investment Banking">SG Corporate & Investment Banking</option>
+                                
+                                    <option value="Nomura Securities International">Nomura Securities International</option>
+                                
+                                    <option value="Popular Securities">Popular Securities</option>
+                                
+                                    <option value="Lufthansa">Lufthansa</option>
+                                
+                                    <option value="Lamberty">Lamberty</option>
+                                
+                                    <option value="Rhein - Main">Rhein - Main</option>
+                                
+                                    <option value="Association of European Airlines">Association of European Airlines</option>
+                                
+                                    <option value="DZ">DZ</option>
+                                
+                                    <option value="Labour">Labour</option>
+                                
+                                    <option value="Ifo">Ifo</option>
+                                
+                                    <option value="Airbus">Airbus</option>
+                                
+                                    <option value="Flight International">Flight International</option>
+                                
+                                    <option value="Circuit City">Circuit City</option>
+                                
+                                    <option value="CL King & Associates">CL King & Associates</option>
+                                
+                                    <option value="Sapporo">Sapporo</option>
+                                
+                                    <option value="Turkcell">Turkcell</option>
+                                
+                                    <option value="Istanbul">Istanbul</option>
+                                
+                                    <option value="Khomeini International Airport">Khomeini International Airport</option>
+                                
+                                    <option value="Brussels">Brussels</option>
+                                
+                                    <option value="World Bank">World Bank</option>
+                                
+                                    <option value="US Secretary of State">US Secretary of State</option>
+                                
+                                    <option value="GM">GM</option>
+                                
+                                    <option value="Buenos Aires">Buenos Aires</option>
+                                
+                                    <option value="Enarsa">Enarsa</option>
+                                
+                                    <option value="Venezuela">Venezuela</option>
+                                
+                                    <option value="Bolivia">Bolivia</option>
+                                
+                                    <option value="Audi">Audi</option>
+                                
+                                    <option value="Deutsche Post">Deutsche Post</option>
+                                
+                                    <option value="Yukos USA">Yukos USA</option>
+                                
+                                    <option value="Global Insight">Global Insight</option>
+                                
+                                    <option value="Prebon Yamane">Prebon Yamane</option>
+                                
+                                    <option value="Worldcom">Worldcom</option>
+                                
+                                    <option value="Metlife">Metlife</option>
+                                
+                                    <option value="Citigroup">Citigroup</option>
+                                
+                                    <option value="Citibank">Citibank</option>
+                                
+                                    <option value="Gartmore">Gartmore</option>
+                                
+                                    <option value="Sarkozy">Sarkozy</option>
+                                
+                                    <option value="FNSEA">FNSEA</option>
+                                
+                                    <option value="Moody">Moody</option>
+                                
+                                    <option value="Dr Reddy">Dr Reddy</option>
+                                
+                                    <option value="Egypt">Egypt</option>
+                                
+                                    <option value="Dublin">Dublin</option>
+                                
+                                    <option value="US economy">US economy</option>
+                                
+                                    <option value="Commerzbank">Commerzbank</option>
+                                
+                                    <option value="ABN Amro">ABN Amro</option>
+                                
+                                    <option value="Ford">Ford</option>
+                                
+                                    <option value="America">America</option>
+                                
+                                    <option value="Toyota">Toyota</option>
+                                
+                                    <option value="Sullivan">Sullivan</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#000000", "font": {"color": "white"}, "id": "US", "label": "US", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Robert Sinche", "label": "Robert Sinche", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Russia", "label": "Russia", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Rosneft", "label": "Rosneft", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Tim Osborne", "label": "Tim Osborne", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Rod Eddington", "label": "Rod Eddington", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Martin Broughton", "label": "Martin Broughton", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Nick Van den Brul", "label": "Nick Van den Brul", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Pernod Ricard", "label": "Pernod Ricard", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Allied Domecq", "label": "Allied Domecq", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Seagram", "label": "Seagram", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Diageo", "label": "Diageo", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Scotland", "label": "Scotland", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Heizo Takenaka", "label": "Heizo Takenaka", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Paul Sheard", "label": "Paul Sheard", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Rick Egelton", "label": "Rick Egelton", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ken Mayland", "label": "Ken Mayland", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Palaniappan Chidambaram", "label": "Palaniappan Chidambaram", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "G20", "label": "G20", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Gordon Brown", "label": "Gordon Brown", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "IMF", "label": "IMF", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Henri Josserand", "label": "Henri Josserand", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Sri Mulyani Indrawati", "label": "Sri Mulyani Indrawati", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Rachel Harvey", "label": "Rachel Harvey", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Megawati Sukarnoputri", "label": "Megawati Sukarnoputri", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "DaimlerChrylser", "label": "DaimlerChrylser", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Mitsubishi Motors", "label": "Mitsubishi Motors", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Takashi Nishioka", "label": "Takashi Nishioka", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Japan", "label": "Japan", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Jeremy Dear", "label": "Jeremy Dear", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Barry Fitzpatrick", "label": "Barry Fitzpatrick", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Conrad Black", "label": "Conrad Black", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Murdoch MacLennan", "label": "Murdoch MacLennan", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Michael Cawley", "label": "Michael Cawley", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Andy Clarke", "label": "Andy Clarke", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Jacques Barrot", "label": "Jacques Barrot", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Enrico Bondi", "label": "Enrico Bondi", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Standard \u0026 Poor", "label": "Standard \u0026 Poor", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bhanu Baweja", "label": "Bhanu Baweja", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Dayanidhi Maran", "label": "Dayanidhi Maran", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Kobita Desai", "label": "Kobita Desai", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Cara Diemont", "label": "Cara Diemont", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Greensleeves", "label": "Greensleeves", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Mike Smith", "label": "Mike Smith", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Frank - Juergen Weise", "label": "Frank - Juergen Weise", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Isabelle Kronawitter", "label": "Isabelle Kronawitter", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "David Naude", "label": "David Naude", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Marie - Pierre Ripert", "label": "Marie - Pierre Ripert", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Yukos", "label": "Yukos", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Houston", "label": "Houston", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Mikhail Khodorkovsky", "label": "Mikhail Khodorkovsky", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Russian", "label": "Russian", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "NHTSA", "label": "NHTSA", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Orin Middleton", "label": "Orin Middleton", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Vestey Group", "label": "Vestey Group", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Alexis Ortiz", "label": "Alexis Ortiz", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD", "label": "eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "eurozone", "label": "eurozone", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "OECD", "label": "OECD", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Jean - Philippe Cotis", "label": "Jean - Philippe Cotis", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Vincent Koen", "label": "Vincent Koen", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bank of Ireland", "label": "Bank of Ireland", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Roy Asher", "label": "Roy Asher", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bernard McAlinden", "label": "Bernard McAlinden", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Tokyo", "label": "Tokyo", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "UFJ Holdings", "label": "UFJ Holdings", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "\u00a31bn ( $ 1. 9bn", "label": "\u00a31bn ( $ 1. 9bn", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Tony Woodley", "label": "Tony Woodley", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "SAIC", "label": "SAIC", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "WPP", "label": "WPP", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Martin Sorrell", "label": "Martin Sorrell", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "J Walter Thompson", "label": "J Walter Thompson", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Digby Jones", "label": "Digby Jones", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Donald Nicolaisen", "label": "Donald Nicolaisen", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Illva Saronno", "label": "Illva Saronno", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Peter McGuigan", "label": "Peter McGuigan", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "UK", "label": "UK", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Alan Greenspan", "label": "Alan Greenspan", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Gerry Spindler", "label": "Gerry Spindler", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Saud Al - Faisal", "label": "Saud Al - Faisal", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Naoki Iizuka", "label": "Naoki Iizuka", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Western Refining Company", "label": "Western Refining Company", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Kyle Cooper", "label": "Kyle Cooper", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Texas City", "label": "Texas City", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Oil", "label": "Oil", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Takashi Yamanaka", "label": "Takashi Yamanaka", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "David Bonderman", "label": "David Bonderman", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Norbert Reithofer", "label": "Norbert Reithofer", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Oxford", "label": "Oxford", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Brad Wernle", "label": "Brad Wernle", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Rover", "label": "Rover", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Americas", "label": "Americas", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Alfa Romeo", "label": "Alfa Romeo", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Fiat", "label": "Fiat", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Maserati", "label": "Maserati", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Silvio Berlusconi", "label": "Silvio Berlusconi", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Italy", "label": "Italy", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "London", "label": "London", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Hyundai", "label": "Hyundai", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Tamil Nadu", "label": "Tamil Nadu", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Demand", "label": "Demand", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "South African", "label": "South African", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Colen Garrow", "label": "Colen Garrow", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Helmut Panke", "label": "Helmut Panke", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "BMW", "label": "BMW", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Rachel Lomax", "label": "Rachel Lomax", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ms Lomax", "label": "Ms Lomax", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Europe", "label": "Europe", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Spennymoor", "label": "Spennymoor", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Electrolux", "label": "Electrolux", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Hans Straberg", "label": "Hans Straberg", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bernie Ebbers", "label": "Bernie Ebbers", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Cynthia Cooper", "label": "Cynthia Cooper", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Arthur Andersen", "label": "Arthur Andersen", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Scott Sullivan", "label": "Scott Sullivan", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "MCI", "label": "MCI", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Eliot Spitzer", "label": "Eliot Spitzer", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Marsh", "label": "Marsh", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Marc Ostwald", "label": "Marc Ostwald", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Simon Wheatley", "label": "Simon Wheatley", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Excluding", "label": "Excluding", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Steve Gallagher", "label": "Steve Gallagher", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Parul Jain", "label": "Parul Jain", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Van Rourke", "label": "Van Rourke", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "George W Bush", "label": "George W Bush", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Air Force One", "label": "Air Force One", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Frankfurt", "label": "Frankfurt", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Michael Lamberty", "label": "Michael Lamberty", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Germany", "label": "Germany", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ulrich Schulte - Strathaus", "label": "Ulrich Schulte - Strathaus", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bernd Weidensteiner", "label": "Bernd Weidensteiner", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Wolfgang Clement", "label": "Wolfgang Clement", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Hans - Werner Sinn", "label": "Hans - Werner Sinn", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Dr Vancheshwar", "label": "Dr Vancheshwar", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Richard Ellis", "label": "Richard Ellis", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Chittabrata Majumdar", "label": "Chittabrata Majumdar", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Boeing", "label": "Boeing", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "David Learmount", "label": "David Learmount", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bill Armstrong", "label": "Bill Armstrong", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Key", "label": "Key", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Iran", "label": "Iran", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Atinc Ozkan", "label": "Atinc Ozkan", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Tehran", "label": "Tehran", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "European Union", "label": "European Union", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Intifada", "label": "Intifada", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Nigel Roberts", "label": "Nigel Roberts", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Colin Powell", "label": "Colin Powell", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Yugansk", "label": "Yugansk", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Sergei Oganesyan", "label": "Sergei Oganesyan", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Dmitry Lukashov", "label": "Dmitry Lukashov", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Gianni Agnelli", "label": "Gianni Agnelli", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Hugo Chavez", "label": "Hugo Chavez", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Kirchner", "label": "Kirchner", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Argentina", "label": "Argentina", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Brazil", "label": "Brazil", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Petrobras", "label": "Petrobras", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "South American", "label": "South American", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Robert Bosch", "label": "Robert Bosch", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Mercedes Benz", "label": "Mercedes Benz", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Andrew Beh", "label": "Andrew Beh", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Deutsche Bank", "label": "Deutsche Bank", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bruce Misamore", "label": "Bruce Misamore", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Howard Archer", "label": "Howard Archer", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Lena Komileva", "label": "Lena Komileva", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "David Myers", "label": "David Myers", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Robert Benmosche", "label": "Robert Benmosche", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Smith Barney", "label": "Smith Barney", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Stuart Quint", "label": "Stuart Quint", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Junya Tanase", "label": "Junya Tanase", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Nicolas Sarkozy", "label": "Nicolas Sarkozy", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "John Snow", "label": "John Snow", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Mr Sarkozy", "label": "Mr Sarkozy", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Jean - Michel Lemetayer", "label": "Jean - Michel Lemetayer", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Helena Hessel", "label": "Helena Hessel", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Israel", "label": "Israel", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "GSM", "label": "GSM", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ruhi Dogusoy", "label": "Ruhi Dogusoy", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Roberto Lavagna", "label": "Roberto Lavagna", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Nestor Kirchner", "label": "Nestor Kirchner", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "New York", "label": "New York", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Finian O\u0027Sullivan", "label": "Finian O\u0027Sullivan", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ireland", "label": "Ireland", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Economists", "label": "Economists", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Carsten Fritsch", "label": "Carsten Fritsch", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "James Carrick", "label": "James Carrick", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Mark LaNeve", "label": "Mark LaNeve", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "North American", "label": "North American", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Jim Press", "label": "Jim Press", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Federal Reserve", "label": "Federal Reserve", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bank of America", "label": "Bank of America", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Menatep Group", "label": "Menatep Group", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "BA", "label": "BA", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "BNP Paribas", "label": "BNP Paribas", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "France", "label": "France", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Glenmorangie", "label": "Glenmorangie", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Lehman Brothers", "label": "Lehman Brothers", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "BMO Financial Group", "label": "BMO Financial Group", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "ClearView Economics", "label": "ClearView Economics", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "India", "label": "India", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Chidambaram", "label": "Chidambaram", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "FAO", "label": "FAO", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "National Development Planning", "label": "National Development Planning", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "BBC", "label": "BBC", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Indonesia", "label": "Indonesia", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Mitsubishi", "label": "Mitsubishi", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Nissan Motor", "label": "Nissan Motor", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "NUJ", "label": "NUJ", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Telegraph Group", "label": "Telegraph Group", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Telegraph", "label": "Telegraph", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ryanair", "label": "Ryanair", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Radio 4", "label": "Radio 4", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "ERAA", "label": "ERAA", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Commissioner for Transport", "label": "Commissioner for Transport", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Morgan Stanley", "label": "Morgan Stanley", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Communications", "label": "Communications", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Gartner", "label": "Gartner", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Dimension Data", "label": "Dimension Data", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Vivaldi", "label": "Vivaldi", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Pinewood", "label": "Pinewood", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Federal Labour Agency", "label": "Federal Labour Agency", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Hypovereinsbank", "label": "Hypovereinsbank", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "IXIS", "label": "IXIS", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "National Highway Traffic Safety Administration", "label": "National Highway Traffic Safety Administration", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Barclays Capital", "label": "Barclays Capital", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Cojedes", "label": "Cojedes", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Reuters", "label": "Reuters", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Hibernian Investment Managers", "label": "Hibernian Investment Managers", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "NCB Stockbrokers", "label": "NCB Stockbrokers", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Transport \u0026 General Worker", "label": "Transport \u0026 General Worker", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "United Business Media", "label": "United Business Media", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Young \u0026 Rubicam", "label": "Young \u0026 Rubicam", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "SEC", "label": "SEC", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Prince", "label": "Prince", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Tsutsumi", "label": "Tsutsumi", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Anheuser - Busch", "label": "Anheuser - Busch", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "London Stock Exchange", "label": "London Stock Exchange", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "South Yorkshire", "label": "South Yorkshire", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Saudi Arabia", "label": "Saudi Arabia", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Dai - ichi Life Research Institute", "label": "Dai - ichi Life Research Institute", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Texas", "label": "Texas", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Citigroup Global Markets", "label": "Citigroup Global Markets", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Opec", "label": "Opec", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "UFJ Bank", "label": "UFJ Bank", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Parmalat", "label": "Parmalat", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Cowley", "label": "Cowley", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Automotive News Europe", "label": "Automotive News Europe", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Longbridge", "label": "Longbridge", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "China", "label": "China", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ferrari", "label": "Ferrari", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Rome", "label": "Rome", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "R \u0026 D", "label": "R \u0026 D", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Canary Wharf", "label": "Canary Wharf", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Chennai", "label": "Chennai", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Economist", "label": "Economist", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bank of England", "label": "Bank of England", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "MPC", "label": "MPC", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Mexico", "label": "Mexico", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Newton Aycliffe", "label": "Newton Aycliffe", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "WorldCom", "label": "WorldCom", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Verizon Communications", "label": "Verizon Communications", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bewlay", "label": "Bewlay", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Monument Securities", "label": "Monument Securities", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Wembley", "label": "Wembley", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Goldman Sachs", "label": "Goldman Sachs", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "SG Corporate \u0026 Investment Banking", "label": "SG Corporate \u0026 Investment Banking", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Nomura Securities International", "label": "Nomura Securities International", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Popular Securities", "label": "Popular Securities", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Lufthansa", "label": "Lufthansa", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Lamberty", "label": "Lamberty", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Rhein - Main", "label": "Rhein - Main", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Association of European Airlines", "label": "Association of European Airlines", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "DZ", "label": "DZ", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Labour", "label": "Labour", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ifo", "label": "Ifo", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Airbus", "label": "Airbus", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Flight International", "label": "Flight International", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Circuit City", "label": "Circuit City", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "CL King \u0026 Associates", "label": "CL King \u0026 Associates", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Sapporo", "label": "Sapporo", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Turkcell", "label": "Turkcell", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Istanbul", "label": "Istanbul", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Khomeini International Airport", "label": "Khomeini International Airport", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Brussels", "label": "Brussels", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "World Bank", "label": "World Bank", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "US Secretary of State", "label": "US Secretary of State", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "GM", "label": "GM", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Buenos Aires", "label": "Buenos Aires", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Enarsa", "label": "Enarsa", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Venezuela", "label": "Venezuela", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Bolivia", "label": "Bolivia", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Audi", "label": "Audi", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Deutsche Post", "label": "Deutsche Post", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Yukos USA", "label": "Yukos USA", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Global Insight", "label": "Global Insight", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Prebon Yamane", "label": "Prebon Yamane", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Worldcom", "label": "Worldcom", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Metlife", "label": "Metlife", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Citigroup", "label": "Citigroup", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Citibank", "label": "Citibank", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Gartmore", "label": "Gartmore", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Sarkozy", "label": "Sarkozy", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "FNSEA", "label": "FNSEA", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Moody", "label": "Moody", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Dr Reddy", "label": "Dr Reddy", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Egypt", "label": "Egypt", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Dublin", "label": "Dublin", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "US economy", "label": "US economy", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Commerzbank", "label": "Commerzbank", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "ABN Amro", "label": "ABN Amro", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Ford", "label": "Ford", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "America", "label": "America", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Toyota", "label": "Toyota", "shape": "circle"}, {"color": "#000000", "font": {"color": "white"}, "id": "Sullivan", "label": "Sullivan", "shape": "circle"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "US", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Federal Reserve"}, {"arrows": "to", "from": "Robert Sinche", "label": "/business/person/company", "title": "/business/person/company", "to": "Bank of America"}, {"arrows": "to", "from": "Russia", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yugansk"}, {"arrows": "to", "from": "Rosneft", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yugansk"}, {"arrows": "to", "from": "Tim Osborne", "label": "/business/person/company", "title": "/business/person/company", "to": "Menatep Group"}, {"arrows": "to", "from": "US", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yukos"}, {"arrows": "to", "from": "Rod Eddington", "label": "/business/person/company", "title": "/business/person/company", "to": "BA"}, {"arrows": "to", "from": "Martin Broughton", "label": "/business/person/company", "title": "/business/person/company", "to": "BA"}, {"arrows": "to", "from": "Nick Van den Brul", "label": "/business/person/company", "title": "/business/person/company", "to": "BNP Paribas"}, {"arrows": "to", "from": "Pernod Ricard", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "France"}, {"arrows": "to", "from": "Allied Domecq", "label": "/people/person/place_lived", "title": "/people/person/place_lived", "to": "London"}, {"arrows": "to", "from": "Seagram", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "US"}, {"arrows": "to", "from": "Diageo", "label": "/business/person/company", "title": "/business/person/company", "to": "Seagram"}, {"arrows": "to", "from": "Scotland", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Glenmorangie"}, {"arrows": "to", "from": "Heizo Takenaka", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Japan"}, {"arrows": "to", "from": "Paul Sheard", "label": "/business/person/company", "title": "/business/person/company", "to": "Lehman Brothers"}, {"arrows": "to", "from": "Rick Egelton", "label": "/business/person/company", "title": "/business/person/company", "to": "BMO Financial Group"}, {"arrows": "to", "from": "Ken Mayland", "label": "/business/person/company", "title": "/business/person/company", "to": "ClearView Economics"}, {"arrows": "to", "from": "Palaniappan Chidambaram", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "India"}, {"arrows": "to", "from": "G20", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Chidambaram"}, {"arrows": "to", "from": "Gordon Brown", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "UK"}, {"arrows": "to", "from": "IMF", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "India"}, {"arrows": "to", "from": "Henri Josserand", "label": "/business/person/company", "title": "/business/person/company", "to": "FAO"}, {"arrows": "to", "from": "Sri Mulyani Indrawati", "label": "/business/person/company", "title": "/business/person/company", "to": "National Development Planning"}, {"arrows": "to", "from": "Rachel Harvey", "label": "/business/person/company", "title": "/business/person/company", "to": "BBC"}, {"arrows": "to", "from": "Megawati Sukarnoputri", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Indonesia"}, {"arrows": "to", "from": "DaimlerChrylser", "label": "/business/person/company", "title": "/business/person/company", "to": "Mitsubishi Motors"}, {"arrows": "to", "from": "Mitsubishi Motors", "label": "/business/company/founders", "title": "/business/company/founders", "to": "DaimlerChrylser"}, {"arrows": "to", "from": "Takashi Nishioka", "label": "/business/person/company", "title": "/business/person/company", "to": "Mitsubishi"}, {"arrows": "to", "from": "Japan", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Nissan Motor"}, {"arrows": "to", "from": "Jeremy Dear", "label": "/business/person/company", "title": "/business/person/company", "to": "NUJ"}, {"arrows": "to", "from": "Barry Fitzpatrick", "label": "/business/person/company", "title": "/business/person/company", "to": "NUJ"}, {"arrows": "to", "from": "Conrad Black", "label": "/business/person/company", "title": "/business/person/company", "to": "Telegraph Group"}, {"arrows": "to", "from": "Murdoch MacLennan", "label": "/business/person/company", "title": "/business/person/company", "to": "Telegraph"}, {"arrows": "to", "from": "Michael Cawley", "label": "/business/person/company", "title": "/business/person/company", "to": "Ryanair"}, {"arrows": "to", "from": "Michael Cawley", "label": "/business/person/company", "title": "/business/person/company", "to": "Radio 4"}, {"arrows": "to", "from": "Andy Clarke", "label": "/business/person/company", "title": "/business/person/company", "to": "ERAA"}, {"arrows": "to", "from": "Jacques Barrot", "label": "/business/person/company", "title": "/business/person/company", "to": "Commissioner for Transport"}, {"arrows": "to", "from": "Enrico Bondi", "label": "/business/person/company", "title": "/business/person/company", "to": "Morgan Stanley"}, {"arrows": "to", "from": "Standard \u0026 Poor", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "India"}, {"arrows": "to", "from": "Bhanu Baweja", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "India"}, {"arrows": "to", "from": "Dayanidhi Maran", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Communications"}, {"arrows": "to", "from": "Kobita Desai", "label": "/business/person/company", "title": "/business/person/company", "to": "Gartner"}, {"arrows": "to", "from": "Cara Diemont", "label": "/business/person/company", "title": "/business/person/company", "to": "Dimension Data"}, {"arrows": "to", "from": "Greensleeves", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Vivaldi"}, {"arrows": "to", "from": "Mike Smith", "label": "/business/person/company", "title": "/business/person/company", "to": "Pinewood"}, {"arrows": "to", "from": "Frank - Juergen Weise", "label": "/business/person/company", "title": "/business/person/company", "to": "Federal Labour Agency"}, {"arrows": "to", "from": "Isabelle Kronawitter", "label": "/business/person/company", "title": "/business/person/company", "to": "Hypovereinsbank"}, {"arrows": "to", "from": "David Naude", "label": "/business/person/company", "title": "/business/person/company", "to": "Deutsche Bank"}, {"arrows": "to", "from": "Marie - Pierre Ripert", "label": "/business/person/company", "title": "/business/person/company", "to": "IXIS"}, {"arrows": "to", "from": "Yukos", "label": "/people/ethnicity/geographic_distribution", "title": "/people/ethnicity/geographic_distribution", "to": "Russian"}, {"arrows": "to", "from": "Houston", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yugansk"}, {"arrows": "to", "from": "Yukos", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yugansk"}, {"arrows": "to", "from": "Mikhail Khodorkovsky", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Yukos"}, {"arrows": "to", "from": "Russia", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yukos"}, {"arrows": "to", "from": "Russian", "label": "/people/ethnicity/geographic_distribution", "title": "/people/ethnicity/geographic_distribution", "to": "Russian"}, {"arrows": "to", "from": "Rosneft", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yugansk"}, {"arrows": "to", "from": "NHTSA", "label": "/business/person/company", "title": "/business/person/company", "to": "National Highway Traffic Safety Administration"}, {"arrows": "to", "from": "Orin Middleton", "label": "/business/person/company", "title": "/business/person/company", "to": "Barclays Capital"}, {"arrows": "to", "from": "Vestey Group", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Cojedes"}, {"arrows": "to", "from": "Alexis Ortiz", "label": "/business/person/company", "title": "/business/person/company", "to": "Reuters"}, {"arrows": "to", "from": "eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD", "label": "/location/location/contains", "title": "/location/location/contains", "to": "OECD"}, {"arrows": "to", "from": "eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD", "label": "/location/location/contains", "title": "/location/location/contains", "to": "eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD"}, {"arrows": "to", "from": "eurozone", "label": "/location/location/contains", "title": "/location/location/contains", "to": "OECD"}, {"arrows": "to", "from": "eurozone", "label": "/location/location/contains", "title": "/location/location/contains", "to": "eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD"}, {"arrows": "to", "from": "OECD", "label": "/location/location/contains", "title": "/location/location/contains", "to": "eurozone bloc, with already sluggish growth forecasts slipping to 1. 8 % from 2. 0 % this year and 1. 9 % from 2. 4 % in 2005, the OECD"}, {"arrows": "to", "from": "Jean - Philippe Cotis", "label": "/business/person/company", "title": "/business/person/company", "to": "OECD"}, {"arrows": "to", "from": "Vincent Koen", "label": "/business/person/company", "title": "/business/person/company", "to": "BBC"}, {"arrows": "to", "from": "Bank of Ireland", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Ireland"}, {"arrows": "to", "from": "Roy Asher", "label": "/business/person/company", "title": "/business/person/company", "to": "Hibernian Investment Managers"}, {"arrows": "to", "from": "Bernard McAlinden", "label": "/business/person/company", "title": "/business/person/company", "to": "NCB Stockbrokers"}, {"arrows": "to", "from": "Japan", "label": "/location/country/capital", "title": "/location/country/capital", "to": "Tokyo"}, {"arrows": "to", "from": "Japan", "label": "/location/country/administrative_divisions", "title": "/location/country/administrative_divisions", "to": "Tokyo"}, {"arrows": "to", "from": "Japan", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Tokyo"}, {"arrows": "to", "from": "Tokyo", "label": "/location/administrative_division/country", "title": "/location/administrative_division/country", "to": "Japan"}, {"arrows": "to", "from": "UFJ Holdings", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Japan"}, {"arrows": "to", "from": "Japan", "label": "/location/country/capital", "title": "/location/country/capital", "to": "Tokyo"}, {"arrows": "to", "from": "Japan", "label": "/location/country/administrative_divisions", "title": "/location/country/administrative_divisions", "to": "Tokyo"}, {"arrows": "to", "from": "Japan", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Tokyo"}, {"arrows": "to", "from": "Tokyo", "label": "/location/administrative_division/country", "title": "/location/administrative_division/country", "to": "Japan"}, {"arrows": "to", "from": "Japan", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Mitsubishi"}, {"arrows": "to", "from": "\u00a31bn ( $ 1. 9bn", "label": "/business/person/company", "title": "/business/person/company", "to": "Rover"}, {"arrows": "to", "from": "Tony Woodley", "label": "/business/person/company", "title": "/business/person/company", "to": "Transport \u0026 General Worker"}, {"arrows": "to", "from": "SAIC", "label": "/business/person/company", "title": "/business/person/company", "to": "Rover"}, {"arrows": "to", "from": "WPP", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "UK"}, {"arrows": "to", "from": "Martin Sorrell", "label": "/business/person/company", "title": "/business/person/company", "to": "United Business Media"}, {"arrows": "to", "from": "J Walter Thompson", "label": "/business/person/company", "title": "/business/person/company", "to": "Young \u0026 Rubicam"}, {"arrows": "to", "from": "Digby Jones", "label": "/business/person/company", "title": "/business/person/company", "to": "BBC"}, {"arrows": "to", "from": "Donald Nicolaisen", "label": "/business/person/company", "title": "/business/person/company", "to": "SEC"}, {"arrows": "to", "from": "Tokyo", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Prince"}, {"arrows": "to", "from": "Japan", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Tsutsumi"}, {"arrows": "to", "from": "Illva Saronno", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Italy"}, {"arrows": "to", "from": "Illva Saronno", "label": "/business/person/company", "title": "/business/person/company", "to": "Anheuser - Busch"}, {"arrows": "to", "from": "Peter McGuigan", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "UK"}, {"arrows": "to", "from": "UK", "label": "/location/location/contains", "title": "/location/location/contains", "to": "London Stock Exchange"}, {"arrows": "to", "from": "Alan Greenspan", "label": "/business/person/company", "title": "/business/person/company", "to": "Federal Reserve"}, {"arrows": "to", "from": "Gerry Spindler", "label": "/business/person/company", "title": "/business/person/company", "to": "South Yorkshire"}, {"arrows": "to", "from": "Saud Al - Faisal", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Saudi Arabia"}, {"arrows": "to", "from": "Naoki Iizuka", "label": "/business/person/company", "title": "/business/person/company", "to": "Dai - ichi Life Research Institute"}, {"arrows": "to", "from": "Western Refining Company", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Texas"}, {"arrows": "to", "from": "Kyle Cooper", "label": "/business/person/company", "title": "/business/person/company", "to": "Citigroup Global Markets"}, {"arrows": "to", "from": "Texas City", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Houston"}, {"arrows": "to", "from": "Oil", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Opec"}, {"arrows": "to", "from": "Takashi Yamanaka", "label": "/business/person/company", "title": "/business/person/company", "to": "UFJ Bank"}, {"arrows": "to", "from": "David Bonderman", "label": "/business/person/company", "title": "/business/person/company", "to": "Ryanair"}, {"arrows": "to", "from": "Enrico Bondi", "label": "/business/person/company", "title": "/business/person/company", "to": "Parmalat"}, {"arrows": "to", "from": "Norbert Reithofer", "label": "/business/person/company", "title": "/business/person/company", "to": "BMW"}, {"arrows": "to", "from": "Oxford", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Cowley"}, {"arrows": "to", "from": "Brad Wernle", "label": "/business/person/company", "title": "/business/person/company", "to": "Automotive News Europe"}, {"arrows": "to", "from": "Rover", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Longbridge"}, {"arrows": "to", "from": "Americas", "label": "/location/location/contains", "title": "/location/location/contains", "to": "China"}, {"arrows": "to", "from": "Alfa Romeo", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Maserati"}, {"arrows": "to", "from": "Fiat", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Maserati"}, {"arrows": "to", "from": "Alfa Romeo", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Maserati"}, {"arrows": "to", "from": "Maserati", "label": "/business/person/company", "title": "/business/person/company", "to": "Ferrari"}, {"arrows": "to", "from": "Fiat", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Italy"}, {"arrows": "to", "from": "Silvio Berlusconi", "label": "/people/person/place_lived", "title": "/people/person/place_lived", "to": "Rome"}, {"arrows": "to", "from": "Silvio Berlusconi", "label": "/people/person/place_of_birth", "title": "/people/person/place_of_birth", "to": "Rome"}, {"arrows": "to", "from": "Italy", "label": "/location/location/contains", "title": "/location/location/contains", "to": "R \u0026 D"}, {"arrows": "to", "from": "London", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Canary Wharf"}, {"arrows": "to", "from": "Hyundai", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "India"}, {"arrows": "to", "from": "Tamil Nadu", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Chennai"}, {"arrows": "to", "from": "Demand", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "India"}, {"arrows": "to", "from": "South African", "label": "/location/location/contains", "title": "/location/location/contains", "to": "South African"}, {"arrows": "to", "from": "Colen Garrow", "label": "/business/person/company", "title": "/business/person/company", "to": "Economist"}, {"arrows": "to", "from": "Helmut Panke", "label": "/business/person/company", "title": "/business/person/company", "to": "BMW"}, {"arrows": "to", "from": "BMW", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "China"}, {"arrows": "to", "from": "BMW", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "China"}, {"arrows": "to", "from": "Rachel Lomax", "label": "/business/person/company", "title": "/business/person/company", "to": "Bank of England"}, {"arrows": "to", "from": "Ms Lomax", "label": "/business/person/company", "title": "/business/person/company", "to": "MPC"}, {"arrows": "to", "from": "Europe", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Mexico"}, {"arrows": "to", "from": "Spennymoor", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Newton Aycliffe"}, {"arrows": "to", "from": "Electrolux", "label": "/business/company/founders", "title": "/business/company/founders", "to": "Hans Straberg"}, {"arrows": "to", "from": "Hans Straberg", "label": "/business/person/company", "title": "/business/person/company", "to": "Electrolux"}, {"arrows": "to", "from": "Bernie Ebbers", "label": "/business/person/company", "title": "/business/person/company", "to": "WorldCom"}, {"arrows": "to", "from": "Cynthia Cooper", "label": "/business/person/company", "title": "/business/person/company", "to": "WorldCom"}, {"arrows": "to", "from": "Arthur Andersen", "label": "/people/person/place_lived", "title": "/people/person/place_lived", "to": "New York"}, {"arrows": "to", "from": "Scott Sullivan", "label": "/business/person/company", "title": "/business/person/company", "to": "WorldCom"}, {"arrows": "to", "from": "MCI", "label": "/business/person/company", "title": "/business/person/company", "to": "Verizon Communications"}, {"arrows": "to", "from": "Eliot Spitzer", "label": "/business/person/company", "title": "/business/person/company", "to": "New York"}, {"arrows": "to", "from": "Marsh", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Bewlay"}, {"arrows": "to", "from": "Marc Ostwald", "label": "/business/person/company", "title": "/business/person/company", "to": "Monument Securities"}, {"arrows": "to", "from": "UK", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Wembley"}, {"arrows": "to", "from": "London", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Wembley"}, {"arrows": "to", "from": "UK", "label": "/location/country/capital", "title": "/location/country/capital", "to": "London"}, {"arrows": "to", "from": "UK", "label": "/location/location/contains", "title": "/location/location/contains", "to": "London"}, {"arrows": "to", "from": "Simon Wheatley", "label": "/business/person/company", "title": "/business/person/company", "to": "Goldman Sachs"}, {"arrows": "to", "from": "Excluding", "label": "/business/person/company", "title": "/business/person/company", "to": "US"}, {"arrows": "to", "from": "Steve Gallagher", "label": "/business/person/company", "title": "/business/person/company", "to": "SG Corporate \u0026 Investment Banking"}, {"arrows": "to", "from": "Parul Jain", "label": "/business/person/company", "title": "/business/person/company", "to": "Nomura Securities International"}, {"arrows": "to", "from": "Van Rourke", "label": "/business/person/company", "title": "/business/person/company", "to": "Popular Securities"}, {"arrows": "to", "from": "George W Bush", "label": "/business/person/company", "title": "/business/person/company", "to": "US"}, {"arrows": "to", "from": "Air Force One", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Frankfurt"}, {"arrows": "to", "from": "Frankfurt", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Lufthansa"}, {"arrows": "to", "from": "Michael Lamberty", "label": "/business/person/company", "title": "/business/person/company", "to": "BBC"}, {"arrows": "to", "from": "Germany", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Lamberty"}, {"arrows": "to", "from": "Frankfurt", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Rhein - Main"}, {"arrows": "to", "from": "Ulrich Schulte - Strathaus", "label": "/business/person/company", "title": "/business/person/company", "to": "Association of European Airlines"}, {"arrows": "to", "from": "Bernd Weidensteiner", "label": "/business/person/company", "title": "/business/person/company", "to": "DZ"}, {"arrows": "to", "from": "Wolfgang Clement", "label": "/people/person/place_lived", "title": "/people/person/place_lived", "to": "Labour"}, {"arrows": "to", "from": "Hans - Werner Sinn", "label": "/business/person/company", "title": "/business/person/company", "to": "Ifo"}, {"arrows": "to", "from": "Dr Vancheshwar", "label": "/business/person/company", "title": "/business/person/company", "to": "BBC"}, {"arrows": "to", "from": "Richard Ellis", "label": "/business/person/company", "title": "/business/person/company", "to": "BBC"}, {"arrows": "to", "from": "Chittabrata Majumdar", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "India"}, {"arrows": "to", "from": "Boeing", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Airbus"}, {"arrows": "to", "from": "Boeing", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Airbus"}, {"arrows": "to", "from": "David Learmount", "label": "/business/person/company", "title": "/business/person/company", "to": "Boeing"}, {"arrows": "to", "from": "David Learmount", "label": "/business/person/company", "title": "/business/person/company", "to": "Flight International"}, {"arrows": "to", "from": "Boeing", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Airbus"}, {"arrows": "to", "from": "Bill Armstrong", "label": "/business/person/company", "title": "/business/person/company", "to": "Circuit City"}, {"arrows": "to", "from": "Bill Armstrong", "label": "/business/person/company", "title": "/business/person/company", "to": "CL King \u0026 Associates"}, {"arrows": "to", "from": "Key", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Sapporo"}, {"arrows": "to", "from": "Iran", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Turkcell"}, {"arrows": "to", "from": "Atinc Ozkan", "label": "/people/person/place_lived", "title": "/people/person/place_lived", "to": "Istanbul"}, {"arrows": "to", "from": "South African", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Turkcell"}, {"arrows": "to", "from": "Tehran", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Khomeini International Airport"}, {"arrows": "to", "from": "European Union", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Brussels"}, {"arrows": "to", "from": "Intifada", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Intifada"}, {"arrows": "to", "from": "Nigel Roberts", "label": "/business/person/company", "title": "/business/person/company", "to": "World Bank"}, {"arrows": "to", "from": "Colin Powell", "label": "/business/person/company", "title": "/business/person/company", "to": "US Secretary of State"}, {"arrows": "to", "from": "Russian", "label": "/people/ethnicity/geographic_distribution", "title": "/people/ethnicity/geographic_distribution", "to": "Russia"}, {"arrows": "to", "from": "Yugansk", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yukos"}, {"arrows": "to", "from": "Sergei Oganesyan", "label": "/business/person/company", "title": "/business/person/company", "to": "Russian"}, {"arrows": "to", "from": "Russian", "label": "/people/ethnicity/geographic_distribution", "title": "/people/ethnicity/geographic_distribution", "to": "US"}, {"arrows": "to", "from": "Dmitry Lukashov", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Russia"}, {"arrows": "to", "from": "Fiat", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "GM"}, {"arrows": "to", "from": "Gianni Agnelli", "label": "/business/person/company", "title": "/business/person/company", "to": "Fiat"}, {"arrows": "to", "from": "Hugo Chavez", "label": "/people/deceased_person/place_of_death", "title": "/people/deceased_person/place_of_death", "to": "Buenos Aires"}, {"arrows": "to", "from": "Kirchner", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Argentina"}, {"arrows": "to", "from": "Argentina", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Enarsa"}, {"arrows": "to", "from": "Brazil", "label": "/business/company_shareholder/major_shareholder_of", "title": "/business/company_shareholder/major_shareholder_of", "to": "Petrobras"}, {"arrows": "to", "from": "Petrobras", "label": "/business/company/major_shareholders", "title": "/business/company/major_shareholders", "to": "Brazil"}, {"arrows": "to", "from": "South American", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Venezuela"}, {"arrows": "to", "from": "South American", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Bolivia"}, {"arrows": "to", "from": "Robert Bosch", "label": "/business/person/company", "title": "/business/person/company", "to": "BMW"}, {"arrows": "to", "from": "Helmut Panke", "label": "/business/person/company", "title": "/business/person/company", "to": "BMW"}, {"arrows": "to", "from": "Mercedes Benz", "label": "/business/person/company", "title": "/business/person/company", "to": "Audi"}, {"arrows": "to", "from": "Andrew Beh", "label": "/business/person/company", "title": "/business/person/company", "to": "Deutsche Post"}, {"arrows": "to", "from": "Yukos", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yugansk"}, {"arrows": "to", "from": "Deutsche Bank", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Houston"}, {"arrows": "to", "from": "Bruce Misamore", "label": "/business/person/company", "title": "/business/person/company", "to": "Yukos"}, {"arrows": "to", "from": "Bruce Misamore", "label": "/business/person/company", "title": "/business/person/company", "to": "Yukos USA"}, {"arrows": "to", "from": "Russia", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yukos"}, {"arrows": "to", "from": "Howard Archer", "label": "/business/person/company", "title": "/business/person/company", "to": "Global Insight"}, {"arrows": "to", "from": "Lena Komileva", "label": "/business/person/company", "title": "/business/person/company", "to": "Prebon Yamane"}, {"arrows": "to", "from": "Bernie Ebbers", "label": "/business/person/company", "title": "/business/person/company", "to": "Worldcom"}, {"arrows": "to", "from": "David Myers", "label": "/business/person/company", "title": "/business/person/company", "to": "Worldcom"}, {"arrows": "to", "from": "Scott Sullivan", "label": "/business/person/company", "title": "/business/person/company", "to": "Worldcom"}, {"arrows": "to", "from": "Robert Benmosche", "label": "/business/person/company", "title": "/business/person/company", "to": "Metlife"}, {"arrows": "to", "from": "Robert Benmosche", "label": "/business/person/company", "title": "/business/person/company", "to": "Citigroup"}, {"arrows": "to", "from": "Smith Barney", "label": "/business/person/company", "title": "/business/person/company", "to": "Citibank"}, {"arrows": "to", "from": "Stuart Quint", "label": "/business/person/company", "title": "/business/person/company", "to": "Gartmore"}, {"arrows": "to", "from": "eurozone", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Brussels"}, {"arrows": "to", "from": "Junya Tanase", "label": "/people/person/place_of_birth", "title": "/people/person/place_of_birth", "to": "Tokyo"}, {"arrows": "to", "from": "Nicolas Sarkozy", "label": "/business/person/company", "title": "/business/person/company", "to": "France"}, {"arrows": "to", "from": "Europe", "label": "/location/location/contains", "title": "/location/location/contains", "to": "France"}, {"arrows": "to", "from": "Nicolas Sarkozy", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "France"}, {"arrows": "to", "from": "John Snow", "label": "/business/person/company", "title": "/business/person/company", "to": "US"}, {"arrows": "to", "from": "Mr Sarkozy", "label": "/business/person/company", "title": "/business/person/company", "to": "Sarkozy"}, {"arrows": "to", "from": "Jean - Michel Lemetayer", "label": "/business/person/company", "title": "/business/person/company", "to": "FNSEA"}, {"arrows": "to", "from": "Russian", "label": "/people/ethnicity/geographic_distribution", "title": "/people/ethnicity/geographic_distribution", "to": "Russian"}, {"arrows": "to", "from": "Russia", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Yukos"}, {"arrows": "to", "from": "Russia", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Moody"}, {"arrows": "to", "from": "Helena Hessel", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Russia"}, {"arrows": "to", "from": "Israel", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Turkcell"}, {"arrows": "to", "from": "GSM", "label": "/business/company/place_founded", "title": "/business/company/place_founded", "to": "Israel"}, {"arrows": "to", "from": "Ruhi Dogusoy", "label": "/business/person/company", "title": "/business/person/company", "to": "Turkcell"}, {"arrows": "to", "from": "Tehran", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Khomeini International Airport"}, {"arrows": "to", "from": "Roberto Lavagna", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Argentina"}, {"arrows": "to", "from": "Nestor Kirchner", "label": "/people/person/nationality", "title": "/people/person/nationality", "to": "Argentina"}, {"arrows": "to", "from": "New York", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Dr Reddy"}, {"arrows": "to", "from": "Finian O\u0027Sullivan", "label": "/business/person/company", "title": "/business/person/company", "to": "Egypt"}, {"arrows": "to", "from": "John Snow", "label": "/business/person/company", "title": "/business/person/company", "to": "US"}, {"arrows": "to", "from": "Ireland", "label": "/location/country/capital", "title": "/location/country/capital", "to": "Dublin"}, {"arrows": "to", "from": "Economists", "label": "/business/person/company", "title": "/business/person/company", "to": "US economy"}, {"arrows": "to", "from": "Carsten Fritsch", "label": "/people/person/place_of_birth", "title": "/people/person/place_of_birth", "to": "Commerzbank"}, {"arrows": "to", "from": "eurozone", "label": "/location/location/contains", "title": "/location/location/contains", "to": "IMF"}, {"arrows": "to", "from": "James Carrick", "label": "/business/person/company", "title": "/business/person/company", "to": "ABN Amro"}, {"arrows": "to", "from": "Mark LaNeve", "label": "/business/person/company", "title": "/business/person/company", "to": "GM"}, {"arrows": "to", "from": "North American", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Ford"}, {"arrows": "to", "from": "US", "label": "/location/location/contains", "title": "/location/location/contains", "to": "America"}, {"arrows": "to", "from": "Japan", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Toyota"}, {"arrows": "to", "from": "Jim Press", "label": "/business/person/company", "title": "/business/person/company", "to": "Toyota"}, {"arrows": "to", "from": "Bernie Ebbers", "label": "/business/person/company", "title": "/business/person/company", "to": "WorldCom"}, {"arrows": "to", "from": "New York", "label": "/location/location/contains", "title": "/location/location/contains", "to": "Sullivan"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.09,
+            "nodeDistance": 200,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

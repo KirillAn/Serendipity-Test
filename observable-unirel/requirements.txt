@@ -1,0 +1,6 @@
+Flask
+Flask-CORS
+pandas
+torch
+transformers
+pyvis

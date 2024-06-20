@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Processing and Graph Visualization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='perParticles.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            background-color: rgba(68, 68, 68, 0.8);
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .file-upload-label, .submit-button {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #000;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 18px;
+            margin-bottom: 10px; /* Margin between buttons */
+        }
+        input[type="file"] {
+            display: none;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+        }
+        .file-name {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #fff;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #000000; /* Black */
+            border-radius: 50%;
+            width: 30px; /* Reduced width */
+            height: 30px; /* Reduced height */
+            animation: spin 2s linear infinite;
+            display: none;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.5s;
+        }
+        .fade-enter, .fade-leave-to {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="fade-enter">
+    <canvas></canvas>
+    <div class="header">Serendipity</div>
+    <div class="container">
+        <h1>Text Processing and Graph Visualization</h1>
+        <form id="upload-form" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+            <div class="btn-group">
+                <label for="file-upload" class="file-upload-label">
+                    Upload a CSV file
+                </label>
+                <input type="file" id="file-upload" name="file" accept=".csv">
+                <span class="file-name" id="file-name">No file chosen</span>
+                <button type="submit" class="submit-button">Submit</button>
+            </div>
+        </form>
+        <div class="loader" id="loader"></div>
+    </div>
+    <script src="{{ url_for('static', filename='perParticles.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            console.log("Document loaded. Initializing particles...");
+            try {
+                particles({
+                    noBounceV: true,
+                    speedV: -100,
+                    speedH: -15,
+                    connections: false,
+                    avoidMouse: false,
+                    hover: false
+                });
+                console.log("Particles initialized.");
+            } catch (error) {
+                console.error("Error initializing particles:", error);
+            }
+        });
+
+        document.getElementById('file-upload').addEventListener('change', function() {
+            var fileName = this.files[0].name;
+            document.getElementById('file-name').textContent = fileName;
+        });
+
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+
+            // Show loader
+            var loader = document.getElementById('loader');
+            loader.style.display = 'block';
+
+            var formData = new FormData(this);
+
+            fetch('/', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json()).then(data => {
+                if (data.success) {
+                    document.body.classList.add('fade-leave-active');
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 500); // Duration should match transition
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                loader.style.display = 'none';  // Hide loader on error
+            });
+        });
+
+        document.body.classList.remove('fade-enter');
+    </script>
+</body>
+</html>

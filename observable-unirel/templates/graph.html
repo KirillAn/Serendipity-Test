@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualization</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #000;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .graph-container {
+            width: 100%;  /* Adjust width to make space for settings */
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .settings-container {
+            width: 20%;  /* Adjust width to make space for settings */
+            height: 100%;
+            background-color: #f3f3f3;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="graph-container">
+        <iframe src="{{ url_for('static', filename='graph.html') }}" width="100%" height="100%" style="border:none;"></iframe>
+    </div>
+    
+</body>
+</html>
