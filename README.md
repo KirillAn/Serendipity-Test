@@ -27,7 +27,7 @@ docker-compose up -d --build
 
 ## Examples
 
-Please proceed to examples.ipynb and Test_new.ipynb if you wish to take a closer look at how things work under the hood and/or use Jupyter as a platform for using the tool.
+Please proceed to unirel_code.ipynb if you wish to take a closer look at how things work under the hood and/or use Jupyter as a platform for using the tool.
 
 **Graphs**
 <div id="header" align="center"> <img src=https://github.com/KirillAn/Serendipity-Test/blob/main/pics/exmpl1.jpg width="1000"/>
