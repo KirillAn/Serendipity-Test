@@ -1,6 +1,8 @@
-Flask
-Flask-CORS
-pandas
-torch
-transformers
-pyvis
+Flask==2.1.1
+Flask-CORS==3.0.10
+pandas==1.4.2
+torch==1.11.0
+transformers==4.18.0
+pyvis==0.1.9
+gunicorn==20.1.0
+
