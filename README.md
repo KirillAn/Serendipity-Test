@@ -5,8 +5,7 @@
 Open-source tool for EDA (Exploratory Data Analysis) of textual corpora. Built with BERTopic, transformers, spaCy, pyvis and Gradio.
 
 This tool would be useful for social science researchers, data journalists, business analysts and PhD students who regularly need to gain insights from text data, but have little or no experience with tuning NLP pipelines/programming complex systems.
-<div id="header" align="center"> <img src=pics/homescreen.mov width="800"/>
-  </div> <br/>
+
 
 ## Installation
 - clone this repo to your local machine
