@@ -9,3 +9,4 @@ services:
       - .:/app
     environment:
       - FLASK_ENV=development
+    command: gunicorn --bind 0.0.0.0:5001 app:app

@@ -7,7 +7,7 @@ from transformers import BertTokenizerFast
 import nltk
 nltk.download('punkt')
 from nltk.tokenize import sent_tokenize
-repo_path = '/Users/kirillanosov/serendipity/UniRel' 
+repo_path = 'UniRel' 
 if repo_path not in sys.path:
     sys.path.append(repo_path)
 
