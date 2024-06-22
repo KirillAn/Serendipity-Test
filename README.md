@@ -62,6 +62,7 @@ Please proceed to unirel_code.ipynb if you wish to take a closer look at how thi
 
 [UniRel](https://github.com/wtangdev/UniRel/tree/main) is used for Relational Triple Extraction (RTE) 
 - everything is encoded in one representation - both entities and relationships
+- working on BERT from Transformers
 - with the help of BERT and a special relationship map extracting relationships
 - Entity-Entity Interaction - whether there is interaction between entities or not. The function is symmetrical
 - Entity-Relation Interaction - separation between an entity and a relationship
