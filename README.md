@@ -42,15 +42,15 @@ Please proceed to unirel_code.ipynb if you wish to take a closer look at how thi
 
 **Graphs**
 <pre>
-  <div id="header" align="center"> <img src=pics/exmpl0.jpg width="1000"/>
+  <div id="header" align="center"> <img src=pics/exampl0.jpg width="1000"/>
   </div>
 </pre>
 <pre>
-<div id="header" align="center"> <img src=pics/exmpl1.jpg width="1000"/>
+<div id="header" align="center"> <img src=pics/exampl1.jpg width="1000"/>
   </div>
 </pre>
 <pre>
-<div id="header" align="center"> <img src=pics/exmpl2.jpg width="1000"/>
+<div id="header" align="center"> <img src=pics/exampl2.jpg width="1000"/>
   </div>
 </pre>
   
